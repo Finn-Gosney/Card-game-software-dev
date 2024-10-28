@@ -1,0 +1,30 @@
+import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
+
+public class CardGame
+{
+    /**
+     * The main thread of the project, 
+     * User can state how many players there are
+     * and what deck to use
+     */
+    public static void main(String[] args)
+    {
+        System.out.println("Hello! Welcome to the Software Development module coursework!");
+        Boolean validPlayerNumber = false;
+        Scanner scanner = new Scanner(System.in); 
+        while (!validPlayerNumber)
+        { 
+        try {
+            System.out.println("Please enter how many players are playing");
+            int noOfPlayers =  Integer.parseInt(scanner.nextLine()); 
+            validPlayerNumber = true;
+        } catch (Exception e) {
+        
+            System.out.println("Please enter a number");
+        }
+        }
+    
+
+    }
+}
