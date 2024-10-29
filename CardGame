@@ -1,5 +1,6 @@
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
+import java.io.File;
 
 public class CardGame
 {
@@ -12,6 +13,7 @@ public class CardGame
     {
         System.out.println("Hello! Welcome to the Software Development module coursework!");
         Boolean validPlayerNumber = false;
+        Boolean validPack = false;
         Scanner scanner = new Scanner(System.in); 
         while (!validPlayerNumber)
         { 
@@ -19,12 +21,35 @@ public class CardGame
             System.out.println("Please enter how many players are playing");
             int noOfPlayers =  Integer.parseInt(scanner.nextLine()); 
             validPlayerNumber = true;
+          
+
         } catch (Exception e) {
         
             System.out.println("Please enter a number");
         }
         }
+        while (!validPack)
+            System.out.println("Please enter the location of the pack to use")
+            String loadPack = scanner.NextLine();
+            try{
+                BufferedReader reader = new BufferedReader(new FileReader(loadPack));
+                int lines = 0;
+                while (reader.readLine() != null) lines++;
+                if (lines == 8 * noOfPlayers)
+                    {
+                        //Do something with deck and cards here
+                        reader.close();
+                    }
+                else (throw new wrongNumberOfCardsException())
+            }
+            catch (fileNotFoundException | wrongNumberOfCardsException e)
+            {
+                System.out.println("Please select a valid pack location, and ensure the pack has 8 * the number of players cards in it");
+            }
     
+        //We probably want to n new player classes, where n is the noOfPlayers
+        //while simultaenously instantiating the deck classes 
+        //After that we want to start the threads 
 
     }
 }
