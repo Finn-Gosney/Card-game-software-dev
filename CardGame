@@ -1,14 +1,19 @@
 import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
 import java.io.File;
 
 public class CardGame
 {
+    
     /**
      * The main thread of the project, 
      * User can state how many players there are
      * and what deck to use
      */
+
+     private List<Deck> decks;
+    private List<Player> players;
+    private int numPlayers; 
+
     public static void main(String[] args)
     {
         System.out.println("Hello! Welcome to the Software Development module coursework!");
@@ -19,7 +24,7 @@ public class CardGame
         { 
         try {
             System.out.println("Please enter how many players are playing");
-            int noOfPlayers =  Integer.parseInt(scanner.nextLine()); 
+            int numPlayers =  Integer.parseInt(scanner.nextLine()); 
             validPlayerNumber = true;
           
 
@@ -35,7 +40,7 @@ public class CardGame
                 BufferedReader reader = new BufferedReader(new FileReader(loadPack));
                 int lines = 0;
                 while (reader.readLine() != null) lines++;
-                if (lines == 8 * noOfPlayers)
+                if (lines == 8 * numPlayers)
                     {
                         //Do something with deck and cards here
                         reader.close();
@@ -46,10 +51,25 @@ public class CardGame
             {
                 System.out.println("Please select a valid pack location, and ensure the pack has 8 * the number of players cards in it");
             }
-    
-        //We probably want to n new player classes, where n is the noOfPlayers
+    createDecks();
+    assignDecks();
+        //We probably want to n new player classes, where n is the numPlayers
         //while simultaenously instantiating the deck classes 
-        //After that we want to start the threads 
+        //Then we are going to have to distribute the cards from the pack
+        //After that we want to start the threads for the program to run
 
+    }
+
+    private void createDecks()  {
+        for (int i = 0; i < numPlayers; i++) {
+            Deck.add(new Deck());
+        }
+    }
+    private void assignDecks()
+    { 
+         for (int i = 0; i < numPlayers; i++) {
+            Deck leftDeck = decks.get(i);
+            Deck rightDeck = decks.get((i + 1) % numPlayers);  // Wraps around to the first deck
+            players.add(new Player("Player " + (i + 1), leftDeck, rightDeck));
     }
 }
