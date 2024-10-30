@@ -9,13 +9,14 @@ public class Player
     private int PlayerNumber;
     private Deck leftDeck;
     private Deck rightDeck;
-    private Bool gameOver;
+    private boolean gameOver;
     private Lock playerLock;
+    private Hand hand;
 
     public Player(int PlayerNumber, Deck leftDeck, Deck rightDeck) {
         this.PlayerNumber = PlayerNumber;
         this.hand = new Hand();
-        this.lock = new ReentrantLock();
+        this.playerLock = new ReentrantLock();
         this.leftDeck = leftDeck;
         this.rightDeck = rightDeck;
     }
