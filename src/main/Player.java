@@ -5,8 +5,10 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.List;
  
-public class Player
-{
+public class Player implements Runnable
+
+{   
+    
     private int PlayerNumber;
     private Deck leftDeck;
     private Deck rightDeck;
@@ -22,7 +24,9 @@ public class Player
         this.rightDeck = rightDeck;
     }
 
-
+    public void run()
+    {}
+    
 
     private class Hand 
     {

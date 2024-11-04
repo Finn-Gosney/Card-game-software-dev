@@ -5,8 +5,11 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.List;
 
-public class Deck
+public class Deck implements Runnable
 {
     private Card[] cards;
     private Lock deckLock;
+
+    public void run()
+    {}
 }
