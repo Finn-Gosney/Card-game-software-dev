@@ -120,9 +120,14 @@ public class CardGame {
         /*
          * This method assigns decks to players by calling the player constructor with
          * the correct deck as the left deck and the correct deck as the right deck
+         * it also then calls a function to distribute the remaining cards to the decks
+         * 
+         * This method is definitely complicated, please ask if you dont understand
          */ 
         int cardsToHands = 4*numPlayers; //We want to distribute the first 4*n cards to players hands
         List<Card> firstCards = new ArrayList<>(cards.subList(0, cardsToHands));
+        cards.subList(0, cardsToHands).clear();  //We can remove the cards that have been distributed so
+                                             //that we can distribute to decks 
 
          for (int i = 0; i < numPlayers; i++) {
             List<Card> playerHandCards = getEveryFourthCard(firstCards, i); // Select every 4th card starting from index 'i'
@@ -134,7 +139,20 @@ public class CardGame {
             Deck rightDeck = decks.get((i + 1) % numPlayers); // Wraps around to the first deck
             players.add(new Player(i + 1, leftDeck, rightDeck, hands.get(i))); // Initialize players with hands
             startPlayerThread(players.get(i));
-            
+        }
+        deckDistribution(decks, cards)
+    }
+
+    deckDistribution(List<Deck> decks, List<Card> cards)
+    {
+       /*
+       Distribute to decks before starting the player threads
+        */ 
+        
+        for(int i = 0; i < numPlayers; i++)
+        {
+            List<Card> deckCards = getEveryFourthCard(cards, i);
+            decks[i].addCards(deckCards);
         }
     }
 
@@ -149,7 +167,7 @@ public class CardGame {
         // Create a new thread for the player and start it
         new Thread(() -> player.startGame()).start();
     }
-    
+
     // Define a custom exception for the wrong number of cards
     private static class WrongNumberOfCardsException extends Exception {
         public WrongNumberOfCardsException() {

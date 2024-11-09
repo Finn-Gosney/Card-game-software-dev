@@ -27,8 +27,6 @@ public class Deck implements Runnable
          * 
          */
 
-         //TODO: Make this work with threading 
-         //Currently cannot make it distrubte 
-         //in a round robin due to the lack of threading
+         this.cards = cards;
     }
 }
