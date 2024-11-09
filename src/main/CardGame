@@ -61,8 +61,10 @@ public class CardGame {
 
     private List<Card> getValidPack()
     /*
-     * Get a valid pack from the user
+     * Get a valid pack from the user to play with 
      */
+    List<Card> cards;
+    Boolean validPack = false;
      while (!validPack) {
             System.out.println("Please enter the location of the pack to use:");
             String loadPack = scanner.nextLine();
@@ -71,9 +73,8 @@ public class CardGame {
                 while (reader.readLine() != null) lines++;
 
                 if (lines == 8 * numPlayers) {
-                    System.out.println("Pack is valid and contains the correct number of cards.")
+                    System.out.println("Pack is valid and contains the correct number of cards.");
                     validPack = true;
-                    List<Card> cards = getCards(loadPack)
                 } else {
                     throw new WrongNumberOfCardsException();
                 }
@@ -85,6 +86,7 @@ public class CardGame {
                 System.out.println(e.message);
             }
         }
+        cards = getCards(loadPack)
         return cards;
     }
 
