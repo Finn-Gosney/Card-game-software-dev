@@ -8,13 +8,14 @@ public class Deck implements Runnable
 {
     private List<Card> cards;
     private Lock deckLock;
+    private int deckNo;
 
     public void run()
     {}
 
-    public Deck()
+    public Deck(int deckNo)
     {
-
+        this.deckNo = deckNo;
     }
 
     public void addCards(List<Card> cards)

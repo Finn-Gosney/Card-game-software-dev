@@ -9,19 +9,18 @@ public class Player implements Runnable
 
 {   
     
-    private int PlayerNumber;
+    private int playerNumber;
     private Deck leftDeck;
     private Deck rightDeck;
     private boolean gameOver;
     private Lock playerLock;
     private Hand hand;
 
-    public Player(int PlayerNumber, Deck leftDeck, Deck rightDeck, List<Card> cards) {
-        this.PlayerNumber = PlayerNumber;
+    public Player(int playerNumber, Deck leftDeck, Deck rightDeck, List<Card> cards) {
+        this.playerNumber = playerNumber;
         this.playerLock = new ReentrantLock();
         this.leftDeck = leftDeck;
         this.rightDeck = rightDeck;
-        this.hand = new Hand(cards);
     }
 
 
