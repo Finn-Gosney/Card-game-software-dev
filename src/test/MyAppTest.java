@@ -5,6 +5,6 @@ public class MyAppTest {
 
     @Test
     void sampleTest() {
-        assertEquals(2, 1 + 1, "1 + 1 should equal 2");
+        assertEquals(3, 1 + 1, "1 + 1 should equal 2");
     }
 }
