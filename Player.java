@@ -1,4 +1,4 @@
-package src.main;
+
 import java.util.Scanner;
 import java.io.File;
 import java.util.concurrent.locks.Lock;
@@ -9,28 +9,29 @@ public class Player implements Runnable
 
 {   
     
-    private int PlayerNumber;
+    private int playerNumber;
     private Deck leftDeck;
     private Deck rightDeck;
     private boolean gameOver;
     private Lock playerLock;
     private Hand hand;
 
-    public Player(int PlayerNumber, Deck leftDeck, Deck rightDeck) {
-        this.PlayerNumber = PlayerNumber;
-        this.hand = new Hand();
+    public Player(int playerNumber, Deck leftDeck, Deck rightDeck) {
+        this.playerNumber = playerNumber;
         this.playerLock = new ReentrantLock();
         this.leftDeck = leftDeck;
         this.rightDeck = rightDeck;
     }
 
+
     public void run()
     {}
+
+
+    public Object startPlayerThread() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'startPlayerThread'");
+    }
     
 
-    private class Hand 
-    {
-        private Card[] cards;
-        private Lock handLock;
-    }
 }

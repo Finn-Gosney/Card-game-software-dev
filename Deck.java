@@ -1,5 +1,3 @@
-package src.main;
-
 import java.util.Scanner;
 import java.io.File;
 import java.util.concurrent.locks.Lock;
@@ -8,9 +6,27 @@ import java.util.List;
 
 public class Deck implements Runnable
 {
-    private Card[] cards;
+    private List<Card> cards;
     private Lock deckLock;
+    private int deckNo;
 
     public void run()
     {}
+
+    public Deck(int deckNo)
+    {
+        this.deckNo = deckNo;
+    }
+
+    public void addCards(List<Card> cards)
+    {
+        /*
+         * This function is soley for the start of the game 
+         * after filling players hands, we fill the decks 
+         * with the remaning cards in the pack
+         * 
+         */
+
+         this.cards = cards;
+    }
 }

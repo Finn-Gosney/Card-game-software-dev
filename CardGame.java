@@ -1,17 +1,18 @@
-package src.main;
 import java.util.Scanner;
+import java.util.stream.IntStream;
 import java.util.List;
 import java.util.ArrayList;
 import java.io.FileReader;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.File;
 
 public class CardGame {
 
     private List<Deck> decks;
     private List<Player> players;
+    private List<Hand> hands;
     private int numPlayers;
     private List<Card> cards;
     private CardManager cardManager = new CardManager();
@@ -39,6 +40,7 @@ public class CardGame {
     {
         
         boolean validPlayerNumber = false;
+        boolean validPack = false;
         Scanner scanner = new Scanner(System.in);
 
         // Get number of players
@@ -58,17 +60,17 @@ public class CardGame {
         return numPlayers;
     }
 
-    private List<Card> getValidPack() {
-        boolean validPack = false;
-
+    private List<Card> getValidPack(){
     /*
-     * Get a valid pack from the user
+     * Get a valid pack from the user to play with 
      */
-
+    List<Card> cards;
+    Boolean validPack = false;
+    String loadPack;
      while (!validPack) {
-            System.out.println("Please enter the location of the pack to use:");
             Scanner scanner = new Scanner(System.in);
-            String loadPack = scanner.nextLine();
+            System.out.println("Please enter the location of the pack to use:");
+            loadPack = scanner.nextLine();
             try (BufferedReader reader = new BufferedReader(new FileReader(loadPack))) {
                 int lines = 0;
                 while (reader.readLine() != null) lines++;
@@ -76,7 +78,6 @@ public class CardGame {
                 if (lines == 8 * numPlayers) {
                     System.out.println("Pack is valid and contains the correct number of cards.");
                     validPack = true;
-                    List<Card> cards = getCards(loadPack);
                 } else {
                     throw new WrongNumberOfCardsException();
                 }
@@ -85,9 +86,10 @@ public class CardGame {
             } catch (IOException e) {
                 System.out.println("Error reading the file. Please try again.");
             } catch (WrongNumberOfCardsException e) {
-                System.out.println("Rip bozo");
+                System.out.println(e.getMessage());
             }
         }
+        cards = getCards(loadPack);
         return cards;
     }
 
@@ -98,11 +100,16 @@ public class CardGame {
          */
         File pack = new File(loadPack + ".txt");
         Scanner reader = new Scanner(pack);
+        List<Integer> cardNumbers = new ArrayList<>();
+        int count = 0;
+        int[] allCardNumbers = new int[8 * numPlayers];
         while (reader.hasNextLine()) {
-            //not done properly
-            int[] cardNumbers = Integer.parseInt(reader.nextLine());
-            List<Card> cards = cardManager.generateCards(cardNumbers);
+            int cardNumber = Integer.parseInt(reader.nextLine());
+            allCardNumbers[count] = cardNumber;
+            count++;
         }
+            cards = cardManager.generateCards(allCardNumbers);
+        
         return cards;
     }
 
@@ -113,7 +120,7 @@ public class CardGame {
          * with the rest of the pack
          */
         for (int i = 0; i < numPlayers; i++) {
-            decks.add(new Deck()); //This is a list of all our decks 
+            decks.add(new Deck(i)); //This is a list of all our decks 
 
             //Deck will have to be threaded later as well, so we might want a function
             //DeckThreadStart(Deck deck)
@@ -124,19 +131,52 @@ public class CardGame {
         /*
          * This method assigns decks to players by calling the player constructor with
          * the correct deck as the left deck and the correct deck as the right deck
+         * it also then calls a function to distribute the remaining cards to the decks
+         * 
+         * This method is definitely complicated, please ask if you dont understand
          */ 
+        int cardsToHands = 4*numPlayers; //We want to distribute the first 4*n cards to players hands
+        List<Card> firstCards = new ArrayList<>(cards.subList(0, cardsToHands));
+        cards.subList(0, cardsToHands).clear();  //We can remove the cards that have been distributed so
+                                             //that we can distribute to decks 
 
-         //TODO:
-         //I need to fix the problem that we need to distribute to the hands first
-         //and then to the decks 
-         //the catch is it has to be in a round robin fashion, requiring threading
+         for (int i = 0; i < numPlayers; i++) {
+            List<Card> playerHandCards = getEveryFourthCard(firstCards, i); // Select every 4th card starting from index 'i'
+            hands.add(new Hand(playerHandCards, i+1)); // Add a hand for each player
+            }
 
         for (int i = 0; i < numPlayers; i++) {
             Deck leftDeck = decks.get(i);
             Deck rightDeck = decks.get((i + 1) % numPlayers); // Wraps around to the first deck
-            players.add(new Player((i + 1), leftDeck, rightDeck, fourCards)); //This is where players are instantiated
-            //Players will be threaded so we will want a function PlayerThreadStart(Player player)
+            players.add(new Player(i + 1, leftDeck, rightDeck)); // Initialize players with hands
+            startPlayerThread(players.get(i));
         }
+        deckDistribution(decks, cards);
+    }
+
+    private void deckDistribution(List<Deck> decks, List<Card> cards)
+    {
+       /*
+       Distribute to decks before starting the player threads
+        */ 
+        
+        for(int i = 0; i < numPlayers; i++)
+        {
+            List<Card> deckCards = getEveryFourthCard(cards, i);
+            decks.get(i).addCards(deckCards);
+        }
+    }
+
+    private List<Card> getEveryFourthCard(List<Card> cards, int startIndex) {
+        return IntStream.range(0, cards.size())
+                .filter(n -> (n - startIndex) % 4 == 0) // Adjust the starting index for each player
+                .mapToObj(cards::get)
+                .toList();
+    }
+
+    private void startPlayerThread(Player player) {
+        // Create a new thread for the player and start it
+        new Thread(() -> player.startPlayerThread()).start();
     }
 
     // Define a custom exception for the wrong number of cards
