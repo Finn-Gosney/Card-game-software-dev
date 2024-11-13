@@ -1,10 +1,12 @@
 import java.util.Scanner;
+import java.util.stream.IntStream;
 import java.util.List;
 import java.util.ArrayList;
 import java.io.FileReader;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.File;
 
 public class CardGame {
 
@@ -28,7 +30,6 @@ public class CardGame {
         cards = getValidPack();
        
         // Create and assign decks and players
-        create(cards, numPlayers);
         createDecks(cards, numPlayers);
         assignDecks(cards, numPlayers);
 
@@ -59,15 +60,16 @@ public class CardGame {
         return numPlayers;
     }
 
-    private List<Card> getValidPack()
+    private List<Card> getValidPack(){
     /*
      * Get a valid pack from the user to play with 
      */
-    List<Card> cards;
     Boolean validPack = false;
+    String loadPack = "";
+    Scanner scanner = new Scanner(System.in);
      while (!validPack) {
             System.out.println("Please enter the location of the pack to use:");
-            String loadPack = scanner.nextLine();
+            loadPack = scanner.nextLine();
             try (BufferedReader reader = new BufferedReader(new FileReader(loadPack))) {
                 int lines = 0;
                 while (reader.readLine() != null) lines++;
@@ -83,10 +85,10 @@ public class CardGame {
             } catch (IOException e) {
                 System.out.println("Error reading the file. Please try again.");
             } catch (WrongNumberOfCardsException e) {
-                System.out.println(e.message);
+                System.out.println(e.getMessage());
             }
         }
-        cards = getCards(loadPack)
+        cards = getCards(loadPack);
         return cards;
     }
 
@@ -96,11 +98,26 @@ public class CardGame {
          * Extract cards from the pack
          */
         File pack = new File(loadPack + ".txt");
-        Scanner reader = new Scanner(pack);
+        int[] allCardNumbers = new int[8 * numPlayers];
+        Scanner reader;
+        try {
+            reader = new Scanner(pack);
+            List<Integer> cardNumbers = new ArrayList<>();
+        int count = 0;
+        
         while (reader.hasNextLine()) {
-            int[] cardNumbers = Integer.parseInt(reader.nextLine());
-            List<Card> cards = manager.generateCards(cardNumbers)
+            int cardNumber = Integer.parseInt(reader.nextLine());
+            allCardNumbers[count] = cardNumber;
+            count++;
         }
+        } 
+        catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    
+            cards = cardManager.generateCards(allCardNumbers);
+        
         return cards;
     }
 
@@ -139,13 +156,13 @@ public class CardGame {
         for (int i = 0; i < numPlayers; i++) {
             Deck leftDeck = decks.get(i);
             Deck rightDeck = decks.get((i + 1) % numPlayers); // Wraps around to the first deck
-            players.add(new Player(i + 1, leftDeck, rightDeck, hands.get(i))); // Initialize players with hands
+            players.add(new Player(i + 1, leftDeck, rightDeck)); // Initialize players with hands
             startPlayerThread(players.get(i));
         }
-        deckDistribution(decks, cards)
+        deckDistribution(decks, cards);
     }
 
-    deckDistribution(List<Deck> decks, List<Card> cards)
+    private void deckDistribution(List<Deck> decks, List<Card> cards)
     {
        /*
        Distribute to decks before starting the player threads
@@ -154,7 +171,7 @@ public class CardGame {
         for(int i = 0; i < numPlayers; i++)
         {
             List<Card> deckCards = getEveryFourthCard(cards, i);
-            decks[i].addCards(deckCards);
+            decks.get(i).addCards(deckCards);
         }
     }
 
@@ -167,7 +184,7 @@ public class CardGame {
 
     private void startPlayerThread(Player player) {
         // Create a new thread for the player and start it
-        new Thread(() -> player.startGame()).start();
+        new Thread(() -> player.startPlayerThread()).start();
     }
 
     // Define a custom exception for the wrong number of cards
