@@ -1,3 +1,4 @@
+
 import java.util.Scanner;
 import java.util.stream.IntStream;
 import java.util.List;
@@ -64,11 +65,10 @@ public class CardGame {
     /*
      * Get a valid pack from the user to play with 
      */
-    List<Card> cards;
     Boolean validPack = false;
-    String loadPack;
+    String loadPack = "";
+    Scanner scanner = new Scanner(System.in);
      while (!validPack) {
-            Scanner scanner = new Scanner(System.in);
             System.out.println("Please enter the location of the pack to use:");
             loadPack = scanner.nextLine();
             try (BufferedReader reader = new BufferedReader(new FileReader(loadPack))) {
@@ -99,15 +99,24 @@ public class CardGame {
          * Extract cards from the pack
          */
         File pack = new File(loadPack + ".txt");
-        Scanner reader = new Scanner(pack);
-        List<Integer> cardNumbers = new ArrayList<>();
-        int count = 0;
         int[] allCardNumbers = new int[8 * numPlayers];
+        Scanner reader;
+        try {
+            reader = new Scanner(pack);
+            List<Integer> cardNumbers = new ArrayList<>();
+        int count = 0;
+        
         while (reader.hasNextLine()) {
             int cardNumber = Integer.parseInt(reader.nextLine());
             allCardNumbers[count] = cardNumber;
             count++;
         }
+        } 
+        catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    
             cards = cardManager.generateCards(allCardNumbers);
         
         return cards;
