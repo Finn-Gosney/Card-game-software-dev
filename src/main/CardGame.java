@@ -15,11 +15,11 @@ import java.io.File;
 
 public class CardGame {
 
-    private List<Deck> decks;
-    private List<Player> players;
-    private List<Hand> hands;
+    private List<Deck> decks = new ArrayList<Deck>();
+    private List<Player> players = new ArrayList<Player>();
+    private List<Hand> hands = new ArrayList<Hand>();
     private int numPlayers;
-    private List<Card> cards;
+    private List<Card> cards = new ArrayList<Card>();
     private CardManager cardManager = new CardManager();
 
     public static void main(String[] args)
@@ -69,7 +69,7 @@ public class CardGame {
         Scanner scanner = new Scanner(System.in);
         List<Card> cards = null;
         boolean validPack = false;
-        String loadPack = null;
+        String loadPack = "";
 
         try {
             while (!validPack) {
@@ -77,21 +77,10 @@ public class CardGame {
                 loadPack = scanner.nextLine();
                 System.out.println("Attempting to load pack from: " + loadPack);
 
-                // Use ClassLoader to access the resource in the resources folder
-                // This has to be done because of our file structures, we also had problems
-                // Because we had slightly different file structures, PLEASE USE THIS FILE 
-                // STRUCTURE OR OUR CODE WILL NOT RUN!
-                // thank you
-                ClassLoader classLoader = getClass().getClassLoader();
-                InputStream inputStream = classLoader.getResourceAsStream("testPack.txt");
-
-                if (inputStream == null) {
-                    System.out.println("File not found in resources. Please select a valid pack location.");
-                    continue; // Try again if the file isn't found
-                }
-
+                File pack = new File("src/main/resources/" + loadPack);
+                System.out.println(pack.getAbsolutePath());
                 // Now read the file from the InputStream
-                try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+                try (BufferedReader reader = new BufferedReader(new FileReader(pack))) {
                     int lines = 0;
                     while (reader.readLine() != null) lines++; //Clean one line solution to count number of cards
 
@@ -107,6 +96,7 @@ public class CardGame {
                 } catch (WrongNumberOfCardsException e) {
                     System.out.println(e.getMessage());
                 }
+
             }
 
             // After the pack is validated, load the cards
@@ -125,22 +115,22 @@ public class CardGame {
         /**
          * Extract cards from the pack
          */
-        File pack = new File(loadPack + ".txt");
+        File pack = new File("src/main/resources/" + loadPack);
         int[] allCardNumbers = new int[8 * numPlayers];
-        Scanner reader;
+        BufferedReader reader;
+        String line;
         try {
-            reader = new Scanner(pack);
+            reader = new BufferedReader(new FileReader(pack));
             List<Integer> cardNumbers = new ArrayList<>();
         int count = 0;
         
-        while (reader.hasNextLine()) {
-            int cardNumber = Integer.parseInt(reader.nextLine());
+        while ((line = reader.readLine()) != null) {
+            int cardNumber = Integer.parseInt(line);
             allCardNumbers[count] = cardNumber;
             count++;
         }
         } 
-        catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
+        catch (IOException e) {
             e.printStackTrace();
         }
     
@@ -158,8 +148,6 @@ public class CardGame {
         for (int i = 0; i < numPlayers; i++) {
             decks.add(new Deck(i)); //This is a list of all our decks 
 
-            //Deck will have to be threaded later as well, so we might want a function
-            //DeckThreadStart(Deck deck)
         }
     }
 
