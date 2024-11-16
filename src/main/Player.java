@@ -16,7 +16,7 @@ public class Player implements Runnable
     private Lock playerLock;
     private Hand hand;
 
-    public Player(int playerNumber, Deck leftDeck, Deck rightDeck, List<Card> cards) {
+    public Player(int playerNumber, Deck leftDeck, Deck rightDeck) {
         this.playerNumber = playerNumber;
         this.playerLock = new ReentrantLock();
         this.leftDeck = leftDeck;
@@ -26,6 +26,12 @@ public class Player implements Runnable
 
     public void run()
     {}
+
+
+    public Object startPlayerThread() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'startPlayerThread'");
+    }
     
 
 }

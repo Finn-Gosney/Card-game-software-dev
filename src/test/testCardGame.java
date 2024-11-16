@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import java.CardGame;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileWriter;

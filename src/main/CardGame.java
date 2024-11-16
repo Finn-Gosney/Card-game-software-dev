@@ -1,3 +1,5 @@
+
+
 import java.util.Scanner;
 import java.util.stream.IntStream;
 import java.util.List;
@@ -6,6 +8,9 @@ import java.io.FileReader;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.file.Paths;
 import java.io.File;
 
 public class CardGame {
@@ -27,7 +32,7 @@ public class CardGame {
         //I dont believe this will have to be threaded 
         System.out.println("Hello! Welcome to the Software Development module coursework!");
         numPlayers = getPlayerNumber();
-        cards = getValidPack();
+        cards = getValidPack(numPlayers);
        
         // Create and assign decks and players
         createDecks(cards, numPlayers);
@@ -48,8 +53,8 @@ public class CardGame {
             try {
                 System.out.println("Please enter how many players are playing:");
                 numPlayers = Integer.parseInt(scanner.nextLine());
-                if (numPlayers < 2) {
-                    System.out.println("Please enter a number greater than 1.");
+                if (numPlayers < 1) {
+                    System.out.println("Please enter a number greater than 0.");
                 } else {
                     validPlayerNumber = true;
                 }
@@ -60,35 +65,58 @@ public class CardGame {
         return numPlayers;
     }
 
-    private List<Card> getValidPack(){
-    /*
-     * Get a valid pack from the user to play with 
-     */
-    Boolean validPack = false;
-    String loadPack = "";
-    Scanner scanner = new Scanner(System.in);
-     while (!validPack) {
-            System.out.println("Please enter the location of the pack to use:");
-            loadPack = scanner.nextLine();
-            try (BufferedReader reader = new BufferedReader(new FileReader(loadPack))) {
-                int lines = 0;
-                while (reader.readLine() != null) lines++;
+    public List<Card> getValidPack(int numPlayers) {
+        Scanner scanner = new Scanner(System.in);
+        List<Card> cards = null;
+        boolean validPack = false;
+        String loadPack = null;
 
-                if (lines == 8 * numPlayers) {
-                    System.out.println("Pack is valid and contains the correct number of cards.");
-                    validPack = true;
-                } else {
-                    throw new WrongNumberOfCardsException();
+        try {
+            while (!validPack) {
+                System.out.println("Please enter the location of the pack to use:");
+                loadPack = scanner.nextLine();
+                System.out.println("Attempting to load pack from: " + loadPack);
+
+                // Use ClassLoader to access the resource in the resources folder
+                // This has to be done because of our file structures, we also had problems
+                // Because we had slightly different file structures, PLEASE USE THIS FILE 
+                // STRUCTURE OR OUR CODE WILL NOT RUN!
+                // thank you
+                ClassLoader classLoader = getClass().getClassLoader();
+                InputStream inputStream = classLoader.getResourceAsStream("testPack.txt");
+
+                if (inputStream == null) {
+                    System.out.println("File not found in resources. Please select a valid pack location.");
+                    continue; // Try again if the file isn't found
                 }
-            } catch (FileNotFoundException e) {
-                System.out.println("File not found. Please select a valid pack location.");
-            } catch (IOException e) {
-                System.out.println("Error reading the file. Please try again.");
-            } catch (WrongNumberOfCardsException e) {
-                System.out.println(e.getMessage());
+
+                // Now read the file from the InputStream
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+                    int lines = 0;
+                    while (reader.readLine() != null) lines++; //Clean one line solution to count number of cards
+
+                    // Validate the pack size
+                    if (lines == 8 * numPlayers) {
+                        System.out.println("Pack is valid and contains the correct number of cards.");
+                        validPack = true;
+                    } else {
+                        throw new WrongNumberOfCardsException("The pack does not contain the correct number of cards.");
+                    }
+                } catch (IOException e) {
+                    System.out.println("Error reading the file. Please try again.");
+                } catch (WrongNumberOfCardsException e) {
+                    System.out.println(e.getMessage());
+                }
             }
+
+            // After the pack is validated, load the cards
+            cards = getCards(loadPack);
+
+        } finally {
+            // Close the scanner resource properly to avoid resource leak
+            scanner.close();
         }
-        cards = getCards(loadPack);
+
         return cards;
     }
 
@@ -184,12 +212,12 @@ public class CardGame {
 
     private void startPlayerThread(Player player) {
         // Create a new thread for the player and start it
-        new Thread(() -> player.startPlayerThread()).start();
+        //new Thread(() -> player.startPlayerThread()).start();
     }
 
     // Define a custom exception for the wrong number of cards
     private static class WrongNumberOfCardsException extends Exception {
-        public WrongNumberOfCardsException() {
+        public WrongNumberOfCardsException(String message) {
             super("Incorrect number of cards in the deck file.");
         }
     }
