@@ -2,19 +2,12 @@
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.*;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class Hand implements Runnable {
-    /*
-     * Cannot really be nested as we 
-     * need to get the cards into 
-     * these hands without going
-     * through player, it just
-     * needs to have a player linked
-     * to it which is done in player's
-     * constructor
-     */
+public class Hand {
+
     private final List<Card> cards;        // Stores the player's cards
     private final ReentrantLock handLock;   // Ensures atomic actions
     private final int playerNo;
@@ -26,7 +19,39 @@ public class Hand implements Runnable {
         this.playerNo = playerNo;
     }
 
-    public void run() {}
+    public List<Card> getHand()
+    {
+        return cards;
+    }
 
+    public int getPlayerNumber()
+    {
+        return playerNo;
+    }
+    
+    public Card discardCard(int playerNo){
+    /*
+     * get the card to discard
+     * ensure we dont discard cards equivalent to player number 
+     * if there are no cards equal to player number, we discard a random card
+     */
+        Card cardToDiscard = null; 
+        Random rand = new Random();
+        List<Card> placeholderHand = cards;
+        for(int i = 0; i < cards.size(); i++)
+        {
+            if (cards.get(i).getValue() == playerNo) 
+            {
+                placeholderHand.remove(i); //ensure we never remove the card equal to player number
+            }
+        }
+        cardToDiscard = placeholderHand.get(rand.nextInt(placeholderHand.size())); //Randomly discard what is left
+        return cardToDiscard;
+    }
+
+    public void addCard(Card card)
+    {
+        cards.add(card);
+    }
 }
 

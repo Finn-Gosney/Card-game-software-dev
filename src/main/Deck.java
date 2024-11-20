@@ -4,7 +4,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.*;
 
-public class Deck implements Runnable
+public class Deck
 {
     /*
      * This class is not threaded, but should be thread safe
@@ -17,8 +17,6 @@ public class Deck implements Runnable
     private int deckNo;
     private Queue<Card> cardQueue;
 
-    public void run()
-    {}
 
     public Deck(int deckNo)
     {
@@ -50,9 +48,9 @@ public class Deck implements Runnable
     }
 
     
-    public Card drawCard() {
+    public synchronized Card drawCard() {
         /*
-         * We want to lock this deck such that only only player can access at a time
+         * We lock this deck by it being synchronised (locks this class)
          * then we want to use collections inbuilt methods to return the head 
          * of the queue
          */
@@ -62,19 +60,17 @@ public class Deck implements Runnable
         return this.cardQueue.poll(); // Remove and return the head of the queue
     }
 
-    public void discardCard(Card card) {
+    public synchronized void discardCard(Card card) {
         /*
-         * Again we need to lock the deck in order to stop 2 players accessing it at the
-         * same time, then we want to add the card from hand back
+         * Again we lock this deck by it using synchronised methods
          */
         if (this.cardQueue == null) {
             throw new IllegalStateException("Queue is not initialized. Call initializeQueue() first.");
         }
         this.cardQueue.offer(card); // Add card to the tail of the queue
     }
-
-    // Optional: Get the current state of the queue
-    public Queue<Card> getQueue() {
+ 
+    public synchronized Queue<Card> getQueue() {
         if (this.cardQueue == null) {
             throw new IllegalStateException("Queue is not initialized. Call initializeQueue() first.");
         }

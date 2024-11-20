@@ -199,8 +199,11 @@ public class CardGame {
     }
 
     private void startPlayerThread(Player player) {
-        // Create a new thread for the player and start it
-        //new Thread(() -> player.startPlayerThread()).start();
+       
+        player.setHand(hands);
+       
+       Thread thread = new Thread(player);
+       thread.start();
     }
 
     // Define a custom exception for the wrong number of cards
