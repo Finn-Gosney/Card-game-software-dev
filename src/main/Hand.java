@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class Hand {
+public class Hand implements Runnable {
     /*
      * Cannot really be nested as we 
      * need to get the cards into 
@@ -25,4 +25,8 @@ public class Hand {
         this.handLock = new ReentrantLock();
         this.playerNo = playerNo;
     }
+
+    public void run() {}
+
 }
+
