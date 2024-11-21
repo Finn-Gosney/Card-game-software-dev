@@ -1,5 +1,4 @@
-
-
+import java.util.List;
 
 public class Card 
 {
@@ -15,7 +14,7 @@ public class Card
         return cardValue;
     }
 
-    public boolean allEqual(Card card) {
+    public boolean isEqual(Card card) {
         /*
          * This is a method to check if 2 cards are equal
          * not strictly required, but in the context of sotware
@@ -26,4 +25,15 @@ public class Card
         Card myClass = (Card) card;
         return cardValue == myClass.cardValue;
     }
+
+    public static boolean areAllCardsEqual(List<Card> cards) {
+    Card firstCard = cards.get(0); 
+    for (Card card : cards) {
+        if (!firstCard.equals(card)) {
+            return false; // Return false if any card is different
+        }
+    }
+
+    return true; // All cards are equal
+}
 }

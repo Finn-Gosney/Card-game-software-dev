@@ -18,17 +18,26 @@ public class Player implements Runnable
         this.playerNumber = playerNumber;
         this.leftDeck = leftDeck;
         this.rightDeck = rightDeck;
+        this.gameOver = false;
     }
 
 
     public void run()
     {
+        Card discardCard = null;
         isRunning = true;
          while (isRunning) {
             System.out.println("Player thread" + playerNumber + "is running...");
             try {
                 checkVictory();
-                checkDiscard();
+                if(gameOver = true)
+                {
+                    //TODO: notify all other threads and stop them
+                    //print hand to a file
+                }
+
+                discardCard = checkDiscard();
+                drawAndDiscard(discardCard);
                 Thread.sleep(100);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
@@ -77,12 +86,24 @@ public class Player implements Runnable
 
     private void checkVictory()
     {
-        List<Card> cards = hand.getHand();
-        for(values : cards)
-        (
-            if 
-        )
 
+        List<Card> cards = hand.getHand();
+        if(Card.areAllCardsEqual(cards))
+        {
+            gameOver = true;
+        }
+        
+    }
+
+    private synchronized void drawAndDiscard(Card discardCard)
+    {
+        /*
+        *in this method, we must, as a single action, draw from the left and discard to the right
+        */
+
+        Card drawnCard = leftDeck.drawCard();
+        rightDeck.discardCard(discardCard);
+        hand.addCard(drawnCard);
     }
 
     private static class NoCorrespondingHandsException extends Exception {
