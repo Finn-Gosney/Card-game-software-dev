@@ -31,7 +31,6 @@ public class Deck {
          */
         this.cards = cards;
         initializeQueue(); // convert to a queue
-        System.out.println("ADDCARDS" +cards);
     }
 
     public void initializeQueue() {
@@ -52,7 +51,6 @@ public class Deck {
         if (this.cardQueue == null) {
             throw new IllegalStateException("Queue is not initialized. Call initializeQueue() first.");
         }
-        System.out.println("polling" + cards);
         return this.cardQueue.poll(); // Remove and return the head of the queue
     }
 

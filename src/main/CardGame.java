@@ -52,7 +52,6 @@ public class CardGame {
                 System.out.println("Please enter a valid number.");
             }
         }
-        scanner.close();
         return numPlayers;
     }
 
