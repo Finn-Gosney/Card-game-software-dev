@@ -159,7 +159,8 @@ public class CardGame {
         // that we can distribute to decks
 
         for (int i = 0; i < numPlayers; i++) {
-            ArrayList<Card> playerHandCards = getEveryNthCard(firstCards, i); // Select every 4th card starting from                                                                    // index 'i'
+            ArrayList<Card> playerHandCards = getEveryNthCard(firstCards, i); // Select every 4th card starting from //
+                                                                              // index 'i'
             hands.add(new Hand(playerHandCards, i + 1)); // Add a hand for each player
         }
 
@@ -190,7 +191,6 @@ public class CardGame {
         }
         return result;
     }
-    
 
     private void startPlayerThread(Player player) {
 

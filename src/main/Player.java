@@ -31,7 +31,6 @@ public class Player implements Runnable
                 if (checkVictory()) {
                     gameOver.set(true);
                     System.out.println("Player " + playerNumber + " wins! Notifying other players...");
-
                     break;
                 }
 

@@ -32,7 +32,7 @@ public class Card {
         }
         Card firstCard = cards.get(0);
         for (Card card : cards) {
-            if (!firstCard.equals(card)) {
+            if (!(firstCard.getValue() == card.getValue())) {
                 return false; // Return false if any card is different
             }
         }
@@ -41,8 +41,7 @@ public class Card {
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return String.valueOf(getValue());
     }
 }
