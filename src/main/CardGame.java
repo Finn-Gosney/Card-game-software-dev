@@ -1,15 +1,10 @@
 
 import java.util.Scanner;
-import java.util.stream.IntStream;
 import java.util.List;
 import java.util.ArrayList;
 import java.io.FileReader;
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.file.Paths;
 import java.io.File;
 
 public class CardGame {
@@ -41,7 +36,6 @@ public class CardGame {
     private int getPlayerNumber() {
 
         boolean validPlayerNumber = false;
-        boolean validPack = false;
         Scanner scanner = new Scanner(System.in);
 
         // Get number of players
@@ -58,6 +52,7 @@ public class CardGame {
                 System.out.println("Please enter a valid number.");
             }
         }
+        scanner.close();
         return numPlayers;
     }
 
@@ -116,7 +111,6 @@ public class CardGame {
         String line;
         try {
             reader = new BufferedReader(new FileReader(pack));
-            List<Integer> cardNumbers = new ArrayList<>();
             int count = 0;
 
             while ((line = reader.readLine()) != null) {

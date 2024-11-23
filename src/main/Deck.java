@@ -3,8 +3,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.*;
 
 public class Deck {
@@ -15,7 +13,6 @@ public class Deck {
      * atomic actions that greatly simplify this class.
      */
     private ArrayList<Card> cards;
-    private Lock deckLock;
     private int deckNo;
     private Queue<Card> cardQueue;
 

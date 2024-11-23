@@ -1,19 +1,14 @@
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
-import java.util.concurrent.*;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class Hand {
 
     private final ArrayList<Card> cards; // Stores the player's cards
-    private final ReentrantLock handLock; // Ensures atomic actions
     private final int playerNo;
 
     public Hand(ArrayList<Card> cards, int playerNo) {
         this.cards = cards;
-        this.handLock = new ReentrantLock();
         this.playerNo = playerNo;
     }
 
