@@ -77,6 +77,9 @@ public class Deck {
     }
 
     public void endSequence() {
+        /*
+         * create a file and write the correct contents to it
+         */
         File outputFile = new File("Deck " + deckNo + " Output.txt");
         try {
             if (outputFile.createNewFile()) {

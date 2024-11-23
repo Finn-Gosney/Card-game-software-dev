@@ -35,7 +35,7 @@ public class Hand {
         Random rand = new Random();
         int count = 0;
         ArrayList<Card> placeholderHand = new ArrayList<>(); // We need to not
-        for (Card card : cards) // have a reference
+        for (Card card : cards) // ensure we dont reference
         { // but a seperate list
             placeholderHand.add(card);
         }

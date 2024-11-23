@@ -27,11 +27,14 @@ public class Player implements Runnable
     }
 
     public void run() {
+        /*
+         * main run function for the thread
+         */
         isRunning = true;
-        while (isRunning && !gameOver.get()) {
+        while (isRunning && !gameOver.get()) { // Loop through untill someone wins
             System.out.println("Player " + playerNumber + " is running...");
             try {
-                if (checkVictory()) {
+                if (checkVictory()) { // Run this if statement if check victory is true
                     gameOver.set(true);
                     System.out.println("Player " + playerNumber + " wins! Notifying other players...");
                     break;
@@ -39,25 +42,28 @@ public class Player implements Runnable
 
                 Card discardCard = checkDiscard();
                 drawAndDiscard(discardCard);
-                Thread.sleep(1);
+                Thread.sleep(1); // clueless
 
             } catch (InterruptedException e) {
                 System.out.println("Player " + playerNumber + " was interrupted.");
-                Thread.currentThread().interrupt();
+                Thread.currentThread().interrupt(); // interupt if a problem occurs
                 break;
             }
         }
 
-        endSequence();
+        endSequence(); // output to files
         leftDeck.endSequence();
     }
 
     private void endSequence() {
+        /*
+         * create a file, and write our hand to it
+         */
         ArrayList<Card> finalCards = hand.getHand();
         System.out.println("Player " + playerNumber + " has stopped. Outputting to file...");
         File outputFile = new File("Player " + playerNumber + " Output.txt");
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile))){
-        writer.write(finalCards.toString());   
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile))) {
+            writer.write(finalCards.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -99,6 +105,9 @@ public class Player implements Runnable
     }
 
     private boolean checkVictory() {
+        /*
+         * returns true if all cards in the hand are equal
+         */
         ArrayList<Card> cards = hand.getHand();
         return Card.areAllCardsEqual(cards);
     }
