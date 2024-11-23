@@ -1,69 +1,66 @@
 
 import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
- 
+
 public class Player implements Runnable
 
-{   
-    
+{
+
     private int playerNumber;
     private Deck leftDeck;
     private Deck rightDeck;
-    private boolean gameOver;
     private Hand hand;
-    private boolean isRunning = false;
+    private boolean isRunning;
+    private static final AtomicBoolean gameOver = new AtomicBoolean(false);
 
     public Player(int playerNumber, Deck leftDeck, Deck rightDeck) {
         this.playerNumber = playerNumber;
         this.leftDeck = leftDeck;
         this.rightDeck = rightDeck;
-        this.gameOver = false;
+        this.isRunning = false;
     }
 
-
-    public void run()
-    {
-        Card discardCard = null;
+    public void run() {
         isRunning = true;
-         while (isRunning) {
-            System.out.println("Player thread" + playerNumber + "is running...");
+        while (isRunning && !gameOver.get()) {
+            System.out.println("Player " + playerNumber + " is running...");
             try {
-                checkVictory();
-                if(gameOver = true)
-                {
-                    //TODO: notify all other threads and stop them
-                    //print hand to a file
+                if (checkVictory()) {
+                    gameOver.set(true);
+                    System.out.println("Player " + playerNumber + " wins! Notifying other players...");
+
+                    break;
                 }
 
-                discardCard = checkDiscard();
+                Card discardCard = checkDiscard();
                 drawAndDiscard(discardCard);
                 Thread.sleep(100);
+
             } catch (InterruptedException e) {
+                System.out.println("Player " + playerNumber + " was interrupted.");
                 Thread.currentThread().interrupt();
-                System.out.println("Thread" + playerNumber + "was interrupted");
                 break;
             }
         }
-        System.out.println("Player thread" + playerNumber + "has stopped." + "\n Outputting to file");
+        System.out.println("Player " + playerNumber + " has stopped. Outputting to file...");
     }
 
-    
-    public void stopPlayerThread()
-    {
+    public void stopPlayerThread() {
         isRunning = false;
-        Thread.currentThread().interrupt(); //blocks any more running code
+        Thread.currentThread().interrupt(); // blocks any more running code
     }
 
-    private Card checkDiscard()
-    {
+    private synchronized Card checkDiscard() {
         /*
          * this method gets the card we want to discard from our hands
          */
         if (hand == null) {
-        throw new IllegalStateException("Hand has not been set for this player.");
-    }
-        return hand.discardCard(playerNumber);
+            throw new IllegalStateException("Hand has not been set for this player.");
+        }
+        return hand.cardToDiscard(playerNumber);
     }
 
     public void setHand(List<Hand> hands) {
@@ -71,38 +68,34 @@ public class Player implements Runnable
          * Set this players hand to the corresponding hand
          */
         try {
-        for (Hand hand : hands) {
-            if (hand.getPlayerNumber() == playerNumber) {
-                this.hand = hand;
-                return; //break out of the method
+            for (Hand hand : hands) {
+                if (hand.getPlayerNumber() == playerNumber) {
+                    this.hand = hand;
+                    return; // break out of the method
+                }
             }
-        }
-            throw new NoCorrespondingHandsException("There is no corresponding hand"); //Throws if IDS do not correspond
+            throw new NoCorrespondingHandsException("There is no corresponding hand"); // Throws if IDs do not
+                                                                                       // correspond
         } catch (Player.NoCorrespondingHandsException e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
         }
     }
 
-    private void checkVictory()
-    {
-
-        List<Card> cards = hand.getHand();
-        if(Card.areAllCardsEqual(cards))
-        {
-            gameOver = true;
-        }
-        
+    private boolean checkVictory() {
+        ArrayList<Card> cards = hand.getHand();
+        System.out.println(cards.toString());
+        return Card.areAllCardsEqual(cards);
     }
 
-    private synchronized void drawAndDiscard(Card discardCard)
-    {
+    private synchronized void drawAndDiscard(Card discardCard) {
         /*
-        *in this method, we must, as a single action, draw from the left and discard to the right
-        */
-
+         * in this method, we must, as a single action, draw from the left and discard
+         * to the right
+         */
         Card drawnCard = leftDeck.drawCard();
         rightDeck.discardCard(discardCard);
+        hand.discardCard(discardCard);
         hand.addCard(drawnCard);
     }
 

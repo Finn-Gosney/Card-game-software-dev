@@ -12,7 +12,7 @@ public class Deck
      * Collections give us inbuilt methods in order to run 
      * atomic actions that greatly simplify this class.
      */
-    private List<Card> cards;
+    private ArrayList<Card> cards;
     private Lock deckLock;
     private int deckNo;
     private Queue<Card> cardQueue;
@@ -25,7 +25,7 @@ public class Deck
         this.cards = null;
     }
 
-    public void addCards(List<Card> cards)
+    public void addCards(ArrayList<Card> cards)
     {
         /*
          * This function is soley for the start of the game 

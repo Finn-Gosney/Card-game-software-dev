@@ -11,9 +11,9 @@ public class CardManager {
      * because it is disgusting
      */
 
-    public List<Card> generateCards(int[] cardNumbers)
+    public ArrayList<Card> generateCards(int[] cardNumbers)
     {
-        List<Card> cards = new ArrayList<>();
+        ArrayList<Card> cards = new ArrayList<>();
     
     
     for(int numbers : cardNumbers)

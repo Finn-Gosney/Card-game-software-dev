@@ -8,18 +8,18 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class Hand {
 
-    private final List<Card> cards;        // Stores the player's cards
+    private final ArrayList<Card> cards;        // Stores the player's cards
     private final ReentrantLock handLock;   // Ensures atomic actions
     private final int playerNo;
 
-    public Hand (List<Card> cards, int playerNo)
+    public Hand (ArrayList<Card> cards, int playerNo)
     {
         this.cards = cards; 
         this.handLock = new ReentrantLock();
         this.playerNo = playerNo;
     }
 
-    public List<Card> getHand()
+    public synchronized ArrayList<Card> getHand()
     {
         return cards;
     }
@@ -29,7 +29,7 @@ public class Hand {
         return playerNo;
     }
     
-    public Card discardCard(int playerNo){
+    public Card cardToDiscard(int playerNo){
     /*
      * get the card to discard
      * ensure we dont discard cards equivalent to player number 
@@ -37,13 +37,25 @@ public class Hand {
      */
         Card cardToDiscard = null; 
         Random rand = new Random();
-        List<Card> placeholderHand = cards;
+        int count = 0;
+        ArrayList<Card> placeholderHand = new ArrayList<>(); //We need to not 
+        for(Card card : cards)                              // have a reference
+        {                                                   // but a seperate list
+            placeholderHand.add(card);
+        }
         for(int i = 0; i < cards.size(); i++)
         {
-            if (cards.get(i).getValue() == playerNo) 
+            
+            if (cards.get(count).getValue() == playerNo) 
             {
-                placeholderHand.remove(i); //ensure we never remove the card equal to player number
+                placeholderHand.remove(count); //ensure we never remove the card equal to player number
             }
+            else{
+            count++;
+            }
+        }
+        if (count > 3) {
+            System.out.println(cards);
         }
         cardToDiscard = placeholderHand.get(rand.nextInt(placeholderHand.size())); //Randomly discard what is left
         return cardToDiscard;
@@ -52,6 +64,10 @@ public class Hand {
     public void addCard(Card card)
     {
         cards.add(card);
+    }
+    public void discardCard(Card card)
+    {
+        cards.remove(card);
     }
 }
 
