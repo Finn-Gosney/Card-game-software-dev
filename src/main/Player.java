@@ -1,7 +1,10 @@
 
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +39,7 @@ public class Player implements Runnable
 
                 Card discardCard = checkDiscard();
                 drawAndDiscard(discardCard);
-                Thread.sleep(100);
+                Thread.sleep(1);
 
             } catch (InterruptedException e) {
                 System.out.println("Player " + playerNumber + " was interrupted.");
@@ -44,7 +47,21 @@ public class Player implements Runnable
                 break;
             }
         }
+
+        endSequence();
+        leftDeck.endSequence();
+    }
+
+    private void endSequence() {
+        ArrayList<Card> finalCards = hand.getHand();
         System.out.println("Player " + playerNumber + " has stopped. Outputting to file...");
+        File outputFile = new File("Player " + playerNumber + " Output.txt");
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile))){
+        writer.write(finalCards.toString());   
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void stopPlayerThread() {
@@ -83,7 +100,6 @@ public class Player implements Runnable
 
     private boolean checkVictory() {
         ArrayList<Card> cards = hand.getHand();
-        System.out.println(cards.toString());
         return Card.areAllCardsEqual(cards);
     }
 

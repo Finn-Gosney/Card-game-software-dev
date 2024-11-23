@@ -47,9 +47,6 @@ public class Hand {
                 count++;
             }
         }
-        if (count > 3) {
-            System.out.println(cards);
-        }
         cardToDiscard = placeholderHand.get(rand.nextInt(placeholderHand.size())); // Randomly discard what is left
         return cardToDiscard;
     }
@@ -61,4 +58,5 @@ public class Hand {
     public void discardCard(Card card) {
         cards.remove(card);
     }
+
 }

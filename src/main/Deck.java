@@ -1,5 +1,8 @@
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.*;
@@ -31,13 +34,13 @@ public class Deck {
          */
         this.cards = cards;
         initializeQueue(); // convert to a queue
+        System.out.println("ADDCARDS" +cards);
     }
 
     public void initializeQueue() {
         // Convert from a list of cards to a queue of cards
         if (this.cardQueue == null) {
             this.cardQueue = new ArrayDeque<>(cards);
-            this.cards = null; // Clear the temporary list reference
         } else {
             throw new IllegalStateException("Queue has already been initialized.");
         }
@@ -52,6 +55,7 @@ public class Deck {
         if (this.cardQueue == null) {
             throw new IllegalStateException("Queue is not initialized. Call initializeQueue() first.");
         }
+        System.out.println("polling" + cards);
         return this.cardQueue.poll(); // Remove and return the head of the queue
     }
 
@@ -70,5 +74,25 @@ public class Deck {
             throw new IllegalStateException("Queue is not initialized. Call initializeQueue() first.");
         }
         return this.cardQueue;
+    }
+
+    public void endSequence() {
+        File outputFile = new File("Deck " + deckNo + " Output.txt");
+        try {
+            if (outputFile.createNewFile()) {
+                System.out.println("File created: " + outputFile.getName());
+            } else {
+                System.out.println("File already exists.");
+            }
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile))) {
+            writer.write(cards.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }
