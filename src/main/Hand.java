@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class Hand {
 
-    private final ArrayList<Card> cards; // Stores the player's cards
+    private final ArrayList<Card> cards; 
     private final int playerNo;
 
     public Hand(ArrayList<Card> cards, int playerNo) {
@@ -29,9 +29,9 @@ public class Hand {
         Card cardToDiscard = null;
         Random rand = new Random();
         int count = 0;
-        ArrayList<Card> placeholderHand = new ArrayList<>(); // We need to not
+        ArrayList<Card> placeholderHand = new ArrayList<>();
         for (Card card : cards) // ensure we dont reference
-        { // but a seperate list
+        { // but create a seperate list
             placeholderHand.add(card);
         }
         for (int i = 0; i < cards.size(); i++) {

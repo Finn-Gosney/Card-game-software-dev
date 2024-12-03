@@ -7,10 +7,8 @@ import java.util.*;
 
 public class Deck {
     /*
-     * This class is not threaded, but should be thread safe
-     * through the use of locks and java collection queues.
-     * Collections give us inbuilt methods in order to run
-     * atomic actions that greatly simplify this class.
+     * This class uses collections to clean up drawing and discard cards
+     * These methods are synchronised to ensure thread safety
      */
     private ArrayList<Card> cards;
     private int deckNo;
@@ -24,17 +22,16 @@ public class Deck {
 
     public void addCards(ArrayList<Card> cards) {
         /*
-         * This function is soley for the start of the game
-         * after filling players hands, we fill the decks
-         * with the remaning cards in the pack and convert
-         * into a collections
+         * At the start of the game, fill up the decks with cards 
          */
         this.cards = cards;
         initializeQueue(); // convert to a queue
     }
 
     public void initializeQueue() {
-        // Convert from a list of cards to a queue of cards
+        /*
+        * Convert from a list of cards to a queue of cards
+        */ 
         if (this.cardQueue == null) {
             this.cardQueue = new ArrayDeque<>(cards);
         } else {

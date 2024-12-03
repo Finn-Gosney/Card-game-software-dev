@@ -69,6 +69,9 @@ public class Player implements Runnable
     }
 
     public void stopPlayerThread() {
+        /*
+         * Stops the player thread when game ends
+         */
         isRunning = false;
         Thread.currentThread().interrupt(); // blocks any more running code
     }

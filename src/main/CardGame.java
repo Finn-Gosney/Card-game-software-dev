@@ -22,7 +22,9 @@ public class CardGame {
     }
 
     public void start() {
-        // I dont believe this will have to be threaded
+       /*
+       *entry point of CardGame
+        */ 
         System.out.println("Hello! Welcome to the Software Development module coursework!");
         numPlayers = getPlayerNumber();
         cards = getValidPack(numPlayers);
@@ -34,7 +36,9 @@ public class CardGame {
     }
 
     private int getPlayerNumber() {
-
+        /*
+         * Gets the number of players playing the game
+         */
         boolean validPlayerNumber = false;
         Scanner scanner = new Scanner(System.in);
 
@@ -56,6 +60,10 @@ public class CardGame {
     }
 
     public ArrayList<Card> getValidPack(int numPlayers) {
+        /*
+         * Recieves user input and ensures it is correct,
+         * then loads the pack
+         */
         Scanner scanner = new Scanner(System.in);
         ArrayList<Card> cards = null;
         boolean validPack = false;
@@ -93,7 +101,6 @@ public class CardGame {
             cards = getCards(loadPack);
 
         } finally {
-            // Close the scanner resource properly to avoid resource leak
             scanner.close();
         }
 
@@ -140,11 +147,8 @@ public class CardGame {
 
     private void assignDecks(ArrayList<Card> cards, int numPlayers) {
         /*
-         * This method assigns decks to players by calling the player constructor with
-         * the correct deck as the left deck and the correct deck as the right deck
-         * it also then calls a function to distribute the remaining cards to the decks
-         * 
-         * This method is definitely complicated, please ask if you dont understand
+         * This method assigns decks to players 
+         * then calls a function to distribute the remaining cards to the decks 
          */
         int cardsToHands = 4 * numPlayers; // We want to distribute the first 4*n cards to players hands
         ArrayList<Card> firstCards = new ArrayList<>(cards.subList(0, cardsToHands));
@@ -152,7 +156,7 @@ public class CardGame {
         // that we can distribute to decks
 
         for (int i = 0; i < numPlayers; i++) {
-            ArrayList<Card> playerHandCards = getEveryNthCard(firstCards, i); // Select every 4th card starting from //
+            ArrayList<Card> playerHandCards = getEveryNthCard(firstCards, i); // Select every 4th card starting from
                                                                               // index 'i'
             hands.add(new Hand(playerHandCards, i + 1)); // Add a hand for each player
         }
@@ -178,6 +182,9 @@ public class CardGame {
     }
 
     private ArrayList<Card> getEveryNthCard(ArrayList<Card> cards, int startIndex) {
+        /*
+         * Helper function for round robin distribution
+         */
         ArrayList<Card> result = new ArrayList<>();
         for (int i = startIndex; i < cards.size(); i += numPlayers) {
             result.add(cards.get(i));
@@ -186,7 +193,9 @@ public class CardGame {
     }
 
     private void startPlayerThread(Player player) {
-
+        /*
+         * Set off all player threads as they are created
+         */
         player.setHand(hands);
 
         Thread thread = new Thread(player);
