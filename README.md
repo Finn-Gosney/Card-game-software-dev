@@ -41,3 +41,11 @@ Design Highlights
         The game dynamically adjusts to the number of players and validates pack sizes accordingly.
     Abstraction:
         Separate classes handle responsibilities for cards, decks, hands, and players, ensuring clean and maintainable code.
+
+Usage
+
+    Run the CardGame class to start the program.
+    Follow the on-screen prompts:
+        Enter the number of players.
+        Provide the relative path to a valid card pack.
+    The game will run until a player wins. Outputs will be saved to the project directory.
