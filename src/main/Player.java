@@ -40,7 +40,7 @@ public class Player implements Runnable
 
                 Card discardCard = checkDiscard();
                 drawAndDiscard(discardCard);
-                Thread.sleep(1); // clueless
+                Thread.sleep(1);
 
             } catch (InterruptedException e) {
                 System.out.println("Player " + playerNumber + " was interrupted.");
