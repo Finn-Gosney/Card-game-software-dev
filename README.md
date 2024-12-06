@@ -33,14 +33,6 @@ Dependencies
 
     Java 8+
 
-Design Highlights
-
-    Thread Safety:
-        Deck operations (drawCard, discardCard) are synchronized to prevent race conditions.
-    Scalability:
-        The game dynamically adjusts to the number of players and validates pack sizes accordingly.
-    Abstraction:
-        Separate classes handle responsibilities for cards, decks, hands, and players, ensuring clean and maintainable code.
 
 Usage
 

@@ -1,0 +1,2 @@
+Player 2Initial hand - [1, 1, 7, 11]
+Player 2 final cards - [14, 9, 17, 29]

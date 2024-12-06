@@ -3,6 +3,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +29,14 @@ public class Player implements Runnable
         /*
          * main run function for the thread
          */
+        
+        File outputFile = fileCreator.createFile(playerNumber, false);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile))) {
+            writer.write("Player " + playerNumber + " initial hand - " + hand.getHand().toString());
+            writer.newLine();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         isRunning = true;
         while (isRunning && !gameOver.get()) { // Loop through untill someone wins
             System.out.println("Player " + playerNumber + " is running...");
@@ -60,14 +69,15 @@ public class Player implements Runnable
         ArrayList<Card> finalCards = hand.getHand();
         System.out.println("Player " + playerNumber + " has stopped. Outputting to file...");
         File outputFile = new File("Player " + playerNumber + " Output.txt");
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile))) {
-            writer.write(finalCards.toString());
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile, true))) {
+            writer.write("Player " + playerNumber + " final cards - " + finalCards.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
 
+    
     public void stopPlayerThread() {
         /*
          * Stops the player thread when game ends

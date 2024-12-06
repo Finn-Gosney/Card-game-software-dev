@@ -1,0 +1,2 @@
+Player 1Initial hand - [1, 1, 6, 10]
+Player 1 final cards - [1, 1, 1, 1]

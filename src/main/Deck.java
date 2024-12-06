@@ -72,17 +72,7 @@ public class Deck {
         /*
          * create a file and write the correct contents to it
          */
-        File outputFile = new File("Deck " + deckNo + " Output.txt");
-        try {
-            if (outputFile.createNewFile()) {
-                System.out.println("File created: " + outputFile.getName());
-            } else {
-                System.out.println("File already exists.");
-            }
-        } catch (IOException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
-        }
+        File outputFile = fileCreator.createFile(deckNo, true);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile))) {
             writer.write(cards.toString());
         } catch (Exception e) {
