@@ -16,6 +16,7 @@ public class Player implements Runnable
     private Deck rightDeck;
     private Hand hand;
     private boolean isRunning;
+    private File outputFile;
     private static final AtomicBoolean gameOver = new AtomicBoolean(false);
 
     public Player(int playerNumber, Deck leftDeck, Deck rightDeck) {
@@ -23,44 +24,42 @@ public class Player implements Runnable
         this.leftDeck = leftDeck;
         this.rightDeck = rightDeck;
         this.isRunning = false;
+        this.outputFile = fileCreator.createFile(playerNumber, false); 
+
     }
 
     public void run() {
         /*
          * main run function for the thread
          */
+        outputInitialHand();
+                
+                isRunning = true;
+                while (isRunning && !gameOver.get()) { // Loop through untill someone wins
+                    System.out.println("Player " + playerNumber + " is running...");
+                    try {
+                        if (checkVictory()) { // Run this if statement if check victory is true
+                            gameOver.set(true);
+                            System.out.println("Player " + playerNumber + " wins! Notifying other players...");
+                            break;
+                        }
         
-        File outputFile = fileCreator.createFile(playerNumber, false);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile))) {
-            writer.write("Player " + playerNumber + " initial hand - " + hand.getHand().toString());
-            writer.newLine();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        isRunning = true;
-        while (isRunning && !gameOver.get()) { // Loop through untill someone wins
-            System.out.println("Player " + playerNumber + " is running...");
-            try {
-                if (checkVictory()) { // Run this if statement if check victory is true
-                    gameOver.set(true);
-                    System.out.println("Player " + playerNumber + " wins! Notifying other players...");
-                    break;
+                        Card discardCard = checkDiscard();
+                        drawAndDiscard(discardCard);
+                        Thread.sleep(1);
+        
+                    } catch (InterruptedException e) {
+                        System.out.println("Player " + playerNumber + " was interrupted.");
+                        Thread.currentThread().interrupt(); // interupt if a problem occurs
+                        break;
+                    }
                 }
-
-                Card discardCard = checkDiscard();
-                drawAndDiscard(discardCard);
-                Thread.sleep(1);
-
-            } catch (InterruptedException e) {
-                System.out.println("Player " + playerNumber + " was interrupted.");
-                Thread.currentThread().interrupt(); // interupt if a problem occurs
-                break;
+        
+                endSequence(); // output to files
+                leftDeck.endSequence();
             }
-        }
 
-        endSequence(); // output to files
-        leftDeck.endSequence();
-    }
+    
 
     private void endSequence() {
         /*
@@ -68,7 +67,6 @@ public class Player implements Runnable
          */
         ArrayList<Card> finalCards = hand.getHand();
         System.out.println("Player " + playerNumber + " has stopped. Outputting to file...");
-        File outputFile = new File("Player " + playerNumber + " Output.txt");
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile, true))) {
             writer.write("Player " + playerNumber + " final cards - " + finalCards.toString());
         } catch (Exception e) {
@@ -77,7 +75,16 @@ public class Player implements Runnable
 
     }
 
-    
+private void outputInitialHand() {
+        
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile))) {
+            writer.write("Player " + playerNumber + " initial hand - " + hand.getHand().toString());
+            writer.newLine();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void stopPlayerThread() {
         /*
          * Stops the player thread when game ends
@@ -132,6 +139,18 @@ public class Player implements Runnable
         rightDeck.discardCard(discardCard);
         hand.discardCard(discardCard);
         hand.addCard(drawnCard);
+
+        outputAction(drawnCard, discardCard);
+    }
+
+    private void outputAction(Card drawnCard, Card discardCard) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile, true))) {
+            writer.write("Player " + playerNumber + " drew " + drawnCard.toString() + " and discarded "
+                    + discardCard.toString());
+            writer.newLine();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private static class NoCorrespondingHandsException extends Exception {

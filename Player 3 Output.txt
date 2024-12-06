@@ -1,2 +1,0 @@
-Player 3Initial hand - [1, 1, 8, 12]
-Player 3 final cards - [1, 11, 6, 22]
