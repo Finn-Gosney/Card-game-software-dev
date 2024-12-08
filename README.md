@@ -20,12 +20,12 @@ Prompts the user to input the number of players.
 Validates the card pack to ensure it contains 8 * numPlayers cards.
 Distributes cards to player hands and decks.
 
-    Gameplay Phase:
+Gameplay Phase:
 Each player runs as a separate thread.
 Players draw a card from their left deck, discard a card to their right deck, and update their hand.
 Players continuously check if they have achieved a winning condition (all cards in their hand are the same).
 
-    Endgame Phase:
+Endgame Phase:
 The first player to achieve the winning condition stops the game.
 Outputs each player's final hand and each deck's contents to respective files.
 
