@@ -19,6 +19,7 @@ Outputs player hands and deck states to files upon game completion.
 ### Setup Phase:
 Prompts the user to input the number of players.
 Validates the card pack to ensure it contains 8 * numPlayers cards.
+These card packs are located in src/main/resources 
 Distributes cards to player hands and decks.
 
 ### Gameplay Phase:
