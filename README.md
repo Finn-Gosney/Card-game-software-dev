@@ -34,6 +34,7 @@ Outputs each player's final hand and each deck's contents to respective files.
 
 ## Dependencies
 Java 8+
+JUnit 4
 
 
 ## Usage
