@@ -24,7 +24,7 @@ public class Player implements Runnable
         this.leftDeck = leftDeck;
         this.rightDeck = rightDeck;
         this.isRunning = false;
-        this.outputFile = fileCreator.createFile(playerNumber, false); 
+        this.outputFile = FileCreator.createFile(playerNumber, false); 
 
     }
 

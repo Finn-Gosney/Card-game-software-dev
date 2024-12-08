@@ -22,9 +22,9 @@ public class CardGame {
     }
 
     public void start() {
-       /*
-       *entry point of CardGame
-        */ 
+        /*
+         * entry point of CardGame
+         */
         System.out.println("Hello! Welcome to the Software Development module coursework!");
         numPlayers = getPlayerNumber();
         cards = getValidPack(numPlayers);
@@ -147,8 +147,8 @@ public class CardGame {
 
     private void assignDecks(ArrayList<Card> cards, int numPlayers) {
         /*
-         * This method assigns decks to players 
-         * then calls a function to distribute the remaining cards to the decks 
+         * This method assigns decks to players
+         * then calls a function to distribute the remaining cards to the decks
          */
         int cardsToHands = 4 * numPlayers; // We want to distribute the first 4*n cards to players hands
         ArrayList<Card> firstCards = new ArrayList<>(cards.subList(0, cardsToHands));
@@ -209,5 +209,4 @@ public class CardGame {
         }
     }
 
-    
 }

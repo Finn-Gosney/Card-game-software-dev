@@ -1,7 +1,7 @@
 import java.io.File;
 import java.io.IOException;
 
-public class fileCreator {
+public class FileCreator {
     public static File createFile(int number, boolean isDeck) {
         File outputFile;
         if(isDeck)

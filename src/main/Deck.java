@@ -72,7 +72,7 @@ public class Deck {
         /*
          * create a file and write the correct contents to it
          */
-        File outputFile = fileCreator.createFile(deckNo, true); //This file only needs to be created at the end
+        File outputFile = FileCreator.createFile(deckNo, true); //This file only needs to be created at the end
         //because it does not need to output initial values 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile))) {
             writer.write(cards.toString());
