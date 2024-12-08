@@ -13,6 +13,10 @@ Ensures thread safety during card operations using synchronized methods.
 Validates input pack files for correct card distribution.
 Outputs player hands and deck states to files upon game completion.
 
+# Running The Test Suite
+
+Running the tests is simple, in VSCode navigate to src/test, pick a test file and run that test.
+If not using VScode, it should be possible to run the tests using Maven or Gradle assuming all dependencies such as the correct JDK version
 
 ## How It Works -
 
