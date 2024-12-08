@@ -96,7 +96,7 @@ public class testDeck {
     public void testEndSequence() {
         deck.addCards(cards);
         deck.endSequence();
-        File outputFile = new File("Deck 1 output.txt");
+        File outputFile = new File("Deck 1 Output.txt");
         assertTrue(outputFile.exists());
     }
 }
