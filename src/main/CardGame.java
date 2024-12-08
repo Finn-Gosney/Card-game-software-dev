@@ -21,7 +21,7 @@ public class CardGame {
         game.start();
     }
 
-    public void start() {
+    private void start() {
         /*
          * entry point of CardGame
          */
@@ -59,7 +59,7 @@ public class CardGame {
         return numPlayers;
     }
 
-    public ArrayList<Card> getValidPack(int numPlayers) {
+    private ArrayList<Card> getValidPack(int numPlayers) {
         /*
          * Recieves user input and ensures it is correct,
          * then loads the pack
